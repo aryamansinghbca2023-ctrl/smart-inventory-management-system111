@@ -4,7 +4,8 @@
   "description": "INVORA — Smart Inventory Management System",
   "scripts": {
     "dev": "cd client && npm run dev",
-    "build": "cd client && npm run build",
-    "install-all": "cd client && npm install"
+    "start": "cd server && npm start",
+    "build": "cd client && npm install && npm run build && cd ../server && npm install",
+    "install-all": "npm run build"
   }
 }

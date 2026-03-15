@@ -60,28 +60,37 @@ app.use((err, req, res, next) => {
   });
 });
 
-if (process.env.NODE_ENV !== 'production') {
-  const PORT = process.env.PORT || 5000;
+const path = require('path');
+
+if (process.env.NODE_ENV === 'production') {
+  // Static Hosting for Render/Heroku
+  app.use(express.static(path.join(__dirname, '../client/dist')));
   
-  const startServer = async () => {
-    try {
-      await connectDB();
-      
-      const userCount = await User.countDocuments();
-      if (userCount === 0) {
-        console.log('🌱 Database is empty. Auto-seeding...');
-        await seedDB();
-      }
-  
-      app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
-    } catch (error) {
-      console.error('❌ Failed to start server:', error);
-      process.exit(1);
-    }
-  };
-  
-  startServer();
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../client/dist', 'index.html'));
+  });
 }
+
+const PORT = process.env.PORT || 5000;
+  
+const startServer = async () => {
+  try {
+    await connectDB();
+    
+    const userCount = await User.countDocuments();
+    if (userCount === 0) {
+      console.log('🌱 Database is empty. Auto-seeding...');
+      await seedDB();
+    }
+
+    app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+  } catch (error) {
+    console.error('❌ Failed to start server:', error);
+    process.exit(1);
+  }
+};
+
+startServer();
 
 
 
