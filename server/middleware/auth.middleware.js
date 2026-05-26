@@ -14,7 +14,7 @@ const protect = async (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'supersecretkey123_invora');
     req.user = { id: decoded.id, name: decoded.name, email: decoded.email, role: decoded.role };
     next();
   } catch (error) {
